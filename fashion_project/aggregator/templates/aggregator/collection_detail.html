@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ collection.image.url }}" class="img-fluid rounded" alt="{{ collection.title }}">
+        </div>
+        <div class="col-md-6">
+            <h1>{{ collection.title }}</h1>
+            <p class="text-muted">By {{ collection.creator.username }}</p>
+            <h3 class="my-3">₹{{ collection.price }}</h3>
+            <p><strong>Category:</strong> {{ collection.get_category_display }}</p>
+            <p class="mt-4">{{ collection.description }}</p>
+            <a href="{{ collection.source_url }}" target="_blank" class="btn btn-dark mt-3">Buy Now</a>
+            <button id="like-btn" data-collection-id="{{ collection.id }}" 
+                    class="btn btn-outline-danger mt-3 ms-2">
+                <i class="bi bi-heart{% if is_liked %}-fill{% endif %}"></i>
+                <span id="like-count">{{ collection.likes.count }}</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('like-btn').addEventListener('click', function() {
+    const collectionId = this.getAttribute('data-collection-id');
+    fetch('/like-collection/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({collection_id: collectionId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        const heartIcon = document.querySelector('#like-btn i');
+        if (data.liked) {
+            heartIcon.classList.remove('bi-heart');
+            heartIcon.classList.add('bi-heart-fill');
+        } else {
+            heartIcon.classList.remove('bi-heart-fill');
+            heartIcon.classList.add('bi-heart');
+        }
+        document.getElementById('like-count').textContent = data.total_likes;
+    });
+});
+</script>
+{% endblock %}

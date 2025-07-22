@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            {% if creator.profile_pic %}
+            <img src="{{ creator.profile_pic.url }}" class="img-fluid rounded-circle" alt="{{ creator.username }}" style="width: 200px; height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <h1>{{ creator.username }}</h1>
+            {% if creator.bio %}
+            <p class="lead">{{ creator.bio }}</p>
+            {% endif %}
+            {% if creator.website %}
+            <p><a href="{{ creator.website }}" target="_blank">{{ creator.website }}</a></p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h3 class="mb-4">Collections</h3>
+    <div class="row">
+        {% for collection in collections %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ collection.image.url }}" class="card-img-top" alt="{{ collection.title }}" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ collection.title }}</h5>
+                    <p class="card-text">₹{{ collection.price }}</p>
+                    <p class="card-text text-muted">{{ collection.category }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{% url 'collection_detail' collection.pk %}" class="btn btn-dark btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">No collections yet.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

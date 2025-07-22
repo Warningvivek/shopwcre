@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Admin Dashboard</h2>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Recent Feedback</h4>
+                </div>
+                <div class="card-body">
+                    {% if feedbacks %}
+                    <div class="list-group">
+                        {% for feedback in feedbacks %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ feedback.email }}</h6>
+                                <small>{{ feedback.created_at|timesince }} ago</small>
+                            </div>
+                            <p class="mb-1">{{ feedback.message }}</p>
+                            {% if not feedback.responded %}
+                            <small><a href="#" class="text-success">Mark as responded</a></small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No pending feedback.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Recent Users</h4>
+                </div>
+                <div class="card-body">
+                    {% if users %}
+                    <div class="list-group">
+                        {% for user in users %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ user.username }}</h6>
+                                <small>{{ user.date_joined|timesince }} ago</small>
+                            </div>
+                            <p class="mb-1">{{ user.get_role_display }}</p>
+                            <small>{{ user.email }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No users found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

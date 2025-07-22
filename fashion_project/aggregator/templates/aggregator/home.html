@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Discover Fashion Collections</h1>
+        <p class="lead">From your favorite creators all in one place</p>
+        <a href="{% url 'creator_list' %}" class="btn btn-light btn-lg">Browse Creators</a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="mb-4">Featured Creators</h2>
+    <div class="row">
+        {% for creator in creators %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if creator.profile_pic %}
+                <img src="{{ creator.profile_pic.url }}" class="card-img-top" alt="{{ creator.username }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ creator.username }}</h5>
+                    <p class="card-text text-muted">{{ creator.bio|truncatechars:50 }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{% url 'creator_detail' creator.username %}" class="btn btn-outline-dark btn-sm">View Collections</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <h2 class="mb-4">Latest Collections</h2>
+    <div class="row">
+        {% for collection in collections %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ collection.image.url }}" class="card-img-top" alt="{{ collection.title }}" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ collection.title }}</h5>
+                    <p class="card-text">By {{ collection.creator.username }}</p>
+                    <p class="card-text">₹{{ collection.price }}</p>
+                    <p class="card-text text-muted">{{ collection.category }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{% url 'collection_detail' collection.pk %}" class="btn btn-dark btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
